@@ -3,13 +3,13 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/:address', function(req, res, next) {
+router.get('/:address', async function(req, res, next) {
 
-  const address = encodeURI(req.params.address);
+  const addrss = encodeURI(req.params.address);
 
-  models.Address.findOne({
+  const address = await models.Address.findOne({
     where: {
-      address,
+      address: addrss,
     },
     include: {
       model: models.Vout,
@@ -17,18 +17,17 @@ router.get('/:address', function(req, res, next) {
         model: models.Transaction,
       },
     },
-  })
-  .then((address) => {
-    if (address === null) {
-      res.status(404).render('404');
-      return;
-    }
-    const txes = [];
-    address.Vouts.forEach((vout) => txes.push(vout.Transaction.txid));
-    res.render('address', {
-      address: address.address,
-      txes,
-    });
+  });
+
+  if (address === null) {
+    res.status(404).render('404');
+    return;
+  }
+  const txes = [];
+  address.Vouts.forEach((vout) => txes.push(vout.Transaction.txid));
+  res.render('address', {
+    address: address.address,
+    txes,
   });
 });
 

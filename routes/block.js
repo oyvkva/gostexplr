@@ -3,9 +3,9 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/:hash', function(req, res, next) {
+router.get('/:hash', async function(req, res, next) {
   const hash = encodeURI(req.params.hash);
-  models.Block.findOne({
+  const block = await models.Block.findOne({
     where: {
       hash,
     },
@@ -13,16 +13,15 @@ router.get('/:hash', function(req, res, next) {
       model: models.Transaction,
     },
   })
-  .then((block) => {
-    if (block === null) {
-      res.status(404).render('404');
-      return;
-    }
-    block.dataValues.time = block.time.toUTCString();
-    res.render('block', {
-      block,
-    });
+  if (block === null) {
+    res.status(404).render('404');
+    return;
+  }
+  block.dataValues.time = block.time.toUTCString();
+  res.render('block', {
+    block,
   });
+
 });
 
 module.exports = router;

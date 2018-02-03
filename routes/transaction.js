@@ -3,10 +3,10 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/:txid', function(req, res, next) {
+router.get('/:txid', async function(req, res, next) {
   const txid = encodeURI(req.params.txid);
 
-  models.Transaction.findOne({
+  const transaction = await models.Transaction.findOne({
     where: {
       txid,
     },
@@ -22,27 +22,24 @@ router.get('/:txid', function(req, res, next) {
       model: models.Transaction,
       as: 'txtx',
     }],
-  })
-  .then((transaction) => {
-    if (transaction === null) {
-      res.status(404).render('404');
-      return;
-    }
-    const vouts = [];
-    transaction.Vouts.forEach((vout) => {
-      vout.Addresses.forEach((address) => {
-        vouts.push({
-          address: address.address,
-          value: vout.value,
-        });
+  });
+  if (transaction === null) {
+    res.status(404).render('404');
+    return;
+  }
+  const vouts = [];
+  transaction.Vouts.forEach((vout) => {
+    vout.Addresses.forEach((address) => {
+      vouts.push({
+        address: address.address,
+        value: vout.value,
       });
     });
-    res.render('transaction', {
-      transaction,
-      vouts,
-    });
   });
-
+  res.render('transaction', {
+    transaction,
+    vouts,
+  });
 });
 
 module.exports = router;

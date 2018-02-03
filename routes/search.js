@@ -3,44 +3,43 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.post('/', function(req, res, next) {
+router.post('/', async function(req, res, next) {
 
   const search = encodeURI(req.body.search);
 
-  models.Address.findOne({
+  // looking for address
+  const address = await models.Address.findOne({
     where: {
       address: search,
     },
-  })
-  .then((address) => {
-    if (address) {
-      res.redirect(`/address/${address.address}`);
-      return;
-    }
-    models.Transaction.findOne({
-      where: {
-        txid: search,
-      },
-    })
-    .then((transaction) => {
-      if (transaction) {
-        res.redirect(`/transaction/${transaction.txid}`);
-        return;
-      }
-      models.Block.findOne({
-        where: {
-          hash: search,
-        },
-      })
-      .then((block) => {
-        if (block) {
-          res.redirect(`/block/${block.hash}`);
-          return;
-        }
-        res.status(404).render('404');
-      });
-    });
   });
+  if (address) {
+    res.redirect(`/address/${address.address}`);
+    return;
+  }
+
+  // looking for transaction
+  const transaction = await models.Transaction.findOne({
+    where: {
+      txid: search,
+    },
+  });
+  if (transaction) {
+    res.redirect(`/transaction/${transaction.txid}`);
+    return;
+  }
+
+  // looking for block
+  const block = await models.Block.findOne({
+    where: {
+      hash: search,
+    },
+  });
+  if (block) {
+    res.redirect(`/block/${block.hash}`);
+    return;
+  }
+  res.status(404).render('404');
 });
 
 module.exports = router;
