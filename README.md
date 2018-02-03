@@ -7,6 +7,11 @@ npm run syncBlockchain
 npm run start
 </pre>
 
+For production use
+<pre>
+export NODE_ENV=production
+</pre>
+
 In ~/.gostcoin/gostcoin.conf add this parameter
 <pre>
 blocknotify=/path/to/your/gostexplr/scripts/blocknotify.sh
