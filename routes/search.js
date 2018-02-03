@@ -6,8 +6,24 @@ var router = express.Router();
 router.post('/', async function(req, res, next) {
 
   let search = encodeURI(req.body.search).trim();
+
+  // checking extra -000 in the end
   if (search.endsWith('-000')) {
     search = search.slice(0, -4);
+  }
+
+  // checking if it is block index
+  const blockIndex = parseInt(search);
+  if (isNaN(blockIndex) === false && blockIndex.toString() === search) {
+    const block = await models.Block.findOne({
+      where: {
+        height: blockIndex,
+      },
+    });
+    if (block) {
+      res.redirect(`/block/${block.hash}/`);
+      return;
+    }
   }
 
   // looking for address
@@ -17,7 +33,7 @@ router.post('/', async function(req, res, next) {
     },
   });
   if (address) {
-    res.redirect(`/address/${address.address}`);
+    res.redirect(`/address/${address.address}/`);
     return;
   }
 
@@ -28,7 +44,7 @@ router.post('/', async function(req, res, next) {
     },
   });
   if (transaction) {
-    res.redirect(`/transaction/${transaction.txid}`);
+    res.redirect(`/transaction/${transaction.txid}/`);
     return;
   }
 
@@ -39,7 +55,7 @@ router.post('/', async function(req, res, next) {
     },
   });
   if (block) {
-    res.redirect(`/block/${block.hash}`);
+    res.redirect(`/block/${block.hash}/`);
     return;
   }
   res.status(404).render('404');
