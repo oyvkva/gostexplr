@@ -1,11 +1,11 @@
 
-[code]
+<pre>
 cd gostexplr
 npm i
 npm run initdb db_root_username db_root_password
 npm run syncBlockchain
-npm run
-[/code]
+npm run start
+</pre>
 
 TODO:
  - cut possible -000 from transaction
