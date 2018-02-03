@@ -1,3 +1,7 @@
+* {
+  outline-color: #bf5c5f;
+}
+
 body {
   font: 16px monospace;
   width: 1024px;
