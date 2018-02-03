@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  h3 Transaction
+
+  table
+    tr
+      td Hash
+      td #{transaction.txid}
+    tr
+      td Block
+      td
+        a(href='/block/#{transaction.Block.hash}/') #{transaction.Block.hash}
+
+  h3 In
+  if transaction.txtx.length
+    table
+      each val in transaction.txtx
+        tr
+          td
+            a(href='/transaction/#{val.txid}/') #{val.txid}
+  else
+    div Mined
+
+  h3 Out
+  table
+    each val in vouts
+      tr
+        td
+          a(href='/address/#{val.address}/') #{val.address}
+        td #{val.value}

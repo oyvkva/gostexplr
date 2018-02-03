@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h3 Block
+
+  table
+    each key in Object.keys(block.dataValues)
+      if (key === 'Transactions')
+        -continue
+      tr
+        td.capitalize #{key}
+        td #{block[key]}
+
+  h3 Transactions
+  each tx in block.Transactions
+    div
+      a(href='/transaction/#{tx.txid}/') #{tx.txid}
+

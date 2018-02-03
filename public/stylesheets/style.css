@@ -1,0 +1,57 @@
+body {
+  font: 16px monospace;
+  width: 1024px;
+  margin: 0 auto 1em;
+}
+
+a {
+  color: #a7393d;
+}
+
+a:hover {
+    color: #bf5c5f;
+}
+
+.header h1 a {
+  color: black;
+  text-decoration: none;
+  align: center;
+}
+
+.header h1 a img {
+  height: 2em;
+  position: relative;
+  margin-right: .5em;
+}
+
+.header form input[type="submit"] {
+  padding: .2em .7em;
+}
+
+@-moz-document url-prefix() {
+  .header form input[type="submit"] {
+    padding: .15em .7em;
+  }
+}
+
+.header form input[type="text"] {
+  padding: .2em;
+}
+
+.header h1 a span {
+  position: relative;
+  top: -0.5em;
+}
+
+.header h1 a span:hover {
+    border-bottom: 3px solid;
+    border-bottom-color: #CF7F7F;
+}
+
+.content {
+  margin-top: 2em;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}

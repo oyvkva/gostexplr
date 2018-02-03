@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h3 Last 30 blocks
+
+  table
+    each block in blocks
+      tr
+        td #{block.height}
+        td
+          a(href='/block/#{block.hash}/') #{block.hash}
