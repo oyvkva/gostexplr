@@ -5,7 +5,10 @@ var router = express.Router();
 /* GET home page. */
 router.post('/', async function(req, res, next) {
 
-  const search = encodeURI(req.body.search);
+  let search = encodeURI(req.body.search).trim();
+  if (search.endsWith('-000')) {
+    search = search.slice(0, -4);
+  }
 
   // looking for address
   const address = await models.Address.findOne({
