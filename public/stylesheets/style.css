@@ -18,6 +18,10 @@ a:hover {
   align: center;
 }
 
+.header h1 a img:hover {
+  filter: brightness(1.25);
+}
+
 .header h1 a img {
   height: 2em;
   position: relative;
