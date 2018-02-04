@@ -5,6 +5,18 @@ block content
 
   table
     each key in Object.keys(block.dataValues)
+      if (key === 'nextblockhash')
+        tr
+          td.capitalize #{key}
+          td
+            a(href='/block/#{block.nextblockhash}/') #{block.nextblockhash}
+        -continue
+      if (key === 'previousblockhash')
+        tr
+          td.capitalize #{key}
+          td
+            a(href='/block/#{block.previousblockhash}/') #{block.previousblockhash}
+        -continue
       if (key === 'Transactions')
         -continue
       tr

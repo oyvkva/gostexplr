@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
   const Address = sequelize.define('Address', {
-    address: DataTypes.STRING(34),
+    address: DataTypes.STRING(35),
   }, {
     timestamps: false,
     indexes: [{

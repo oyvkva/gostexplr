@@ -6,14 +6,7 @@ body {
   font: 16px monospace;
 }
 
-.page-wrapper {
-  display: flex;
-  justify-content: center;
-}
-
-.page.absolute {
-  display: flex;
-  flex-direction: column;
+.page {
 }
 
 table td {
@@ -28,43 +21,44 @@ a:hover {
     color: #bf5c5f;
 }
 
+.header {
+  overflow: hidden;
+}
+
 .header h1 a {
   color: black;
   text-decoration: none;
   align: center;
   outline: none;
 }
-
-.header h1 a img:hover {
+.header .logo {
+  float: left;
+}
+.header .logo a img:hover {
   filter: brightness(1.25);
 }
 
-.header h1 a img {
-  height: 2em;
+.header .logo a img {
+  height: 84px;
   position: relative;
   margin-right: .5em;
 }
 
-.header form input[type="submit"] {
+form.search input[type="submit"] {
   padding: .2em .7em;
 }
 
 @-moz-document url-prefix() {
-  .header form input[type="submit"] {
+  form.search input[type="submit"] {
     padding: .15em .7em;
   }
 }
 
-.header form input[type="text"] {
+form.search input[type="text"] {
   padding: .2em;
 }
 
-.header h1 a span {
-  position: relative;
-  top: -0.5em;
-}
-
-.header h1 a span:hover {
+.header h1 a:hover {
     border-bottom: 3px solid;
     border-bottom-color: #CF7F7F;
 }

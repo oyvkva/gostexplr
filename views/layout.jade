@@ -4,17 +4,18 @@ html
     title GOSTcoin blockchain explorer
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='shortcut icon', href='/favicon.ico')
+    meta(name="viewport", content="width=device-width")
   body
-    div.page-wrapper
-      div.page
-        div.header
-          h1
-            a(href='/')
-              img(src='/images/gostcoin-b.png')
-              span GOSTcoin blockchain explorer
-          div
-            form(action="/search/", method="POST")
-              input(type="text", name="search" placeholder="Search by transaction id, block hash/index or address", size="68")
-              input(type="submit", value=">>")
-        div.content
-          block content
+    div.page
+      div.header
+        div.logo
+          a(href='/')
+            img(src='/images/gostcoin-b.png')
+        h1
+          a(href='/') GOSTcoin blockchain explorer
+      div
+        form.search(action="/search/", method="POST")
+          input(type="text", name="search" placeholder="Search by transaction id, block hash/index or address", size="68")
+          input(type="submit", value=">>")
+      div.content
+        block content
