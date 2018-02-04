@@ -1,12 +1,19 @@
 {
   "name": "gostexplr",
-  "version": "0.0.0",
+  "description": "GOSTcoin blockchain explorer",
+  "version": "0.0.3",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
     "initdb": "node ./bin/initdb.js",
-    "reinitTables": "node ./bin/reinitTables.js",
     "syncBlockchain": "node ./bin/syncBlockchain.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xcps/gostexplr.git"
+  },
+  "engines": {
+    "node": ">=7.10.1"
   },
   "dependencies": {
     "babel-register": "^6.26.0",
