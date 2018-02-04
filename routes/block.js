@@ -12,11 +12,17 @@ router.get('/:hash', async function(req, res, next) {
     include: {
       model: models.Transaction,
     },
-  })
+  });
   if (block === null) {
     res.status(404).render('404');
     return;
   }
+  const lastBlock = await models.Block.findOne({
+    attributes: [
+      [models.sequelize.fn('MAX', models.sequelize.col('height')), 'maxheight']
+    ],
+  });
+  block.dataValues.confirmations = lastBlock.dataValues.maxheight - block.height + 1;
   block.dataValues.time = block.time.toUTCString();
   res.render('block', {
     block,
