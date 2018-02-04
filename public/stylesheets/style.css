@@ -4,8 +4,16 @@
 
 body {
   font: 16px monospace;
-  width: 1024px;
-  margin: 0 auto 1em;
+}
+
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.page.absolute {
+  display: flex;
+  flex-direction: column;
 }
 
 table td {
