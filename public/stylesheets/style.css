@@ -20,6 +20,7 @@ a:hover {
   color: black;
   text-decoration: none;
   align: center;
+  outline: none;
 }
 
 .header h1 a img:hover {
