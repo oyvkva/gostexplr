@@ -11,6 +11,9 @@ block content
       td Block
       td
         a(href='/block/#{transaction.Block.hash}/') #{transaction.Block.hash}
+    tr
+      td Block time
+      td #{transaction.blockTime}
 
   h3 In
   if transaction.txtx.length

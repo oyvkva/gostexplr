@@ -11,7 +11,7 @@ router.get('/:txid', async function(req, res, next) {
       txid,
     },
     include: [{
-      attributes: ['hash'],
+      attributes: ['hash', 'time'],
       model: models.Block,
     },{
       model: models.Vout,
@@ -36,6 +36,7 @@ router.get('/:txid', async function(req, res, next) {
       });
     });
   });
+  transaction.blockTime = transaction.Block.time.toUTCString();
   res.render('transaction', {
     transaction,
     vouts,

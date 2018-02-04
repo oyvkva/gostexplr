@@ -8,6 +8,10 @@ body {
   margin: 0 auto 1em;
 }
 
+table td {
+  padding-right: 1em;
+}
+
 a {
   color: #a7393d;
 }
