@@ -1,25 +1,34 @@
 {
-  "development": {
-    "username": "geuser",
-    "password": "geuser",
-    "database": "gedb",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "logging": false
+  "database": {
+    "development": {
+      "username": "geuser",
+      "password": "geuser",
+      "database": "gedb",
+      "host": "127.0.0.1",
+      "dialect": "mysql",
+      "logging": false
+    },
+    "test": {
+      "username": "root",
+      "password": null,
+      "database": "database_test",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    },
+    "production": {
+      "username": "geuser",
+      "password": "geuser",
+      "database": "gedb",
+      "host": "127.0.0.1",
+      "dialect": "mysql",
+      "logging": false
+    }
   },
-  "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+  "rpc": {
+    "username": "gostcoinrpc",
+    "password": "CEQLt9zrNnmyzosSV7pjb3EksAkuY9qeqoUCwDQc2wPc",
+    "hostname": "127.0.0.1",
+    "port": 9376
   },
-  "production": {
-    "username": "geuser",
-    "password": "geuser",
-    "database": "gedb",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "logging": false
-  }
+  "env": "production"
 }

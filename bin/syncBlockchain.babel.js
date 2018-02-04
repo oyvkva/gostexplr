@@ -1,10 +1,8 @@
 var http = require('http');
 var models = require('../models');
+var rpcConfig = require('../config/config')['rpc'];
 
-const username = 'gostcoinrpc';
-const password = 'CEQLt9zrNnmyzosSV7pjb3EksAkuY9qeqoUCwDQc2wPc';
-const hostname = '127.0.0.1';
-const port = 9376;
+const {username, password, hostname, port} = rpcConfig;
 
 function MakeRPCRequest(postData) {
 	return new Promise(function(resolve, reject) {
