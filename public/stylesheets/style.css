@@ -4,9 +4,12 @@
 
 body {
   font: 16px monospace;
+  text-align: center;
 }
 
 .page {
+  display: inline-block;
+  text-align: left;
 }
 
 table td {
