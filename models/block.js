@@ -6,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
     	primaryKey: true,
     },
     hash: DataTypes.STRING(64),
-    confirmations: DataTypes.MEDIUMINT.UNSIGNED,
     size: DataTypes.MEDIUMINT.UNSIGNED,
     version: DataTypes.TINYINT.UNSIGNED,
     merkleroot: DataTypes.STRING(64),

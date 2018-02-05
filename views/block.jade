@@ -4,7 +4,7 @@ block content
   h3 Block
 
   table
-    each key in Object.keys(block.dataValues)
+    each key in Object.keys(block)
       if (key === 'nextblockhash')
         tr
           td.capitalize #{key}

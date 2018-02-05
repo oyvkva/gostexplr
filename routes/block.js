@@ -5,7 +5,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/:hash', async function(req, res, next) {
   const hash = encodeURI(req.params.hash);
-  const block = await models.Block.findOne({
+  const blockInstance = await models.Block.findOne({
     where: {
       hash,
     },
@@ -13,7 +13,7 @@ router.get('/:hash', async function(req, res, next) {
       model: models.Transaction,
     },
   });
-  if (block === null) {
+  if (blockInstance === null) {
     res.status(404).render('404');
     return;
   }
@@ -21,9 +21,11 @@ router.get('/:hash', async function(req, res, next) {
     attributes: [
       [models.sequelize.fn('MAX', models.sequelize.col('height')), 'maxheight']
     ],
+    raw: true,
   });
-  block.dataValues.confirmations = lastBlock.dataValues.maxheight - block.height + 1;
-  block.dataValues.time = block.time.toUTCString();
+  const block = blockInstance.toJSON();
+  block.confirmations = lastBlock.maxheight - block.height + 1;
+  block.time = block.time.toUTCString();
   res.render('block', {
     block,
   });

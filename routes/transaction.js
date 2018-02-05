@@ -11,7 +11,7 @@ router.get('/:txid', async function(req, res, next) {
       txid,
     },
     include: [{
-      attributes: ['hash', 'time'],
+      attributes: ['hash', 'time', 'height'],
       model: models.Block,
     },{
       model: models.Vout,
@@ -36,10 +36,18 @@ router.get('/:txid', async function(req, res, next) {
       });
     });
   });
+  const lastBlock = await models.Block.findOne({
+    attributes: [
+      [models.sequelize.fn('MAX', models.sequelize.col('height')), 'maxheight']
+    ],
+    raw: true,
+  });
+  const confirmations = lastBlock.maxheight - transaction.Block.height + 1;
   transaction.blockTime = transaction.Block.time.toUTCString();
   res.render('transaction', {
     transaction,
     vouts,
+    confirmations,
   });
 });
 
