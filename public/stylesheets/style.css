@@ -44,7 +44,7 @@ a:hover {
 .header .logo a img {
   height: 84px;
   position: relative;
-  margin-right: .5em;
+  margin-right: 1em;
 }
 
 form.search input[type="submit"] {
