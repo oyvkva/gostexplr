@@ -143,17 +143,16 @@ async function syncBlockchain() {
 
   let currentHeight = await getCurrentHeight();
   console.log('\x1b[36m%s\x1b[0m', 'currentHeight is', currentHeight);
-  while (syncedHeight < currentHeight) {
-    syncedHeight = await syncNextBlock(syncedHeight);
-    console.log('\x1b[36m%s\x1b[0m', 'syncedHeight: ', syncedHeight)
+  try {
+    while (syncedHeight < currentHeight) {
+      syncedHeight = await syncNextBlock(syncedHeight);
+      console.log('\x1b[36m%s\x1b[0m', 'syncedHeight: ', syncedHeight)
+    }
+  } catch (e) {
+    console.log('=====', e);
+    process.exit(0);
   }
   process.exit(0);
 }
-
-var postData = JSON.stringify({
-      'method': 'getinfo',
-      'params': [],
-      'id': 1
-    });
 
 syncBlockchain();

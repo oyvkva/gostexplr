@@ -34,17 +34,28 @@ a:hover {
   align: center;
   outline: none;
 }
+
+.header h1 a:hover {
+    border-bottom: 3px solid;
+    border-bottom-color: #CF7F7F;
+}
+
 .header .logo {
   float: left;
 }
+
 .header .logo a img:hover {
   filter: brightness(1.25);
 }
 
 .header .logo a img {
-  height: 84px;
+  height: 77px;
   position: relative;
   margin-right: 1em;
+}
+
+.search-wrapper {
+  margin-top: 1em;
 }
 
 form.search input[type="submit"] {
@@ -59,11 +70,6 @@ form.search input[type="submit"] {
 
 form.search input[type="text"] {
   padding: .2em;
-}
-
-.header h1 a:hover {
-    border-bottom: 3px solid;
-    border-bottom-color: #CF7F7F;
 }
 
 .content {
