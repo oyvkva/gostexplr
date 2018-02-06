@@ -20,7 +20,7 @@ router.get('/:address/:offset*?', async function(req, res, next) {
     LEFT JOIN Addresses as a
     ON a.id=av.AddressId
     WHERE a.address='${addrss}'
-    LIMIT 30
+    LIMIT ${limit}
     OFFSET ${offset};
   `);
 
