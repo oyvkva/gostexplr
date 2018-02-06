@@ -16,6 +16,7 @@ router.post('/', async function(req, res, next) {
   const blockIndex = parseInt(search);
   if (isNaN(blockIndex) === false && blockIndex.toString() === search) {
     const block = await models.Block.findOne({
+      attributes: ['hash'],
       where: {
         height: blockIndex,
       },
@@ -51,6 +52,7 @@ router.post('/', async function(req, res, next) {
 
     // looking for block
     const block = await models.Block.findOne({
+      attributes: ['hash'],
       where: {
         hash: search,
       },

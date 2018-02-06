@@ -6,6 +6,7 @@ var router = express.Router();
 router.get('/', async function(req, res, next) {
 
   const blocks = await models.Block.findAll({
+    attributes: ['height', 'hash'],
     order: [['height', 'DESC']],
     limit: 30,
   });
