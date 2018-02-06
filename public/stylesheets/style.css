@@ -79,3 +79,8 @@ form.search input[type="text"] {
 .capitalize {
   text-transform: capitalize;
 }
+
+div.pagination {
+  overflow: hidden;
+  margin-top: .5em;
+}
