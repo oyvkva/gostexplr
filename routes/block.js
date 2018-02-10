@@ -13,10 +13,12 @@ router.get('/:hash', async function(req, res, next) {
       model: models.Transaction,
     },
   });
+
   if (blockInstance === null) {
     res.status(404).render('404');
     return;
   }
+
   const lastBlock = await models.Block.findOne({
     attributes: [
       [models.sequelize.fn('MAX', models.sequelize.col('height')), 'maxheight']

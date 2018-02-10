@@ -39,7 +39,6 @@ async function saveTransaction(txid, blockHeight) {
     id: 1
   }));
   const tx = JSON.parse(res_tx)['result'];
-  // console.log('tx:', tx);
   if (tx === null) {
     await models.Failure.create({
       msg: `${txid} fetching failed`,
@@ -50,11 +49,17 @@ async function saveTransaction(txid, blockHeight) {
     txid: tx.txid,
     BlockHeight: blockHeight,
   });
+
+  // Loop over vouts
   for (var i = 0; i < tx.vout.length; i++) {
     const vout = tx.vout[i];
+
     const m_vout = await models.Vout.create({
+      n: vout.n,
       value: vout.value,
     });
+
+    // Loop over addresses in vout
     for (var y = 0; y < vout.scriptPubKey.addresses.length; y++) {
       const address = vout.scriptPubKey.addresses[y];
       let m_address = await models.Address.findOne({
@@ -69,18 +74,26 @@ async function saveTransaction(txid, blockHeight) {
       }
       await m_vout.addAddresses(m_address);
     }
-    await transaction.addVouts(m_vout);
+    await transaction.addVouts(m_vout, {through: {direction: 1}});
   }
   for (var i = 0; i < tx.vin.length; i++) {
     const vin = tx.vin[i];
     if (vin.txid) {
-      const trans = await models.Transaction.findOne({
+      const vout = await models.Vout.findAll({
+        include: {
+          model: models.Transaction,
+          where: {
+            txid: vin.txid,
+          },
+        },
         where: {
-          txid: vin.txid,
+          n: vin.vout,
         },
       });
-      if (trans) {
-        await transaction.addTxtx(trans);
+      if (vout) {
+        await transaction.addVouts(vout, { through: { direction: 0, }, });
+      } else {
+        throw('Couldnt find vout for VIN');
       }
     }
   }

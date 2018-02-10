@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "initdb": "node ./bin/initdb.js",
+    "createUserAndDb": "node ./bin/createUserAndDb.js",
     "syncBlockchain": "node ./bin/syncBlockchain.js",
     "addN": "node ./bin/addNToVouts.js"
   },
@@ -22,10 +23,10 @@
     "debug": "~2.6.9",
     "express": "~4.15.5",
     "forever": "^0.15.3",
-    "jade": "~1.11.0",
     "morgan": "~1.9.0",
     "mysql": "^2.15.0",
     "mysql2": "^1.5.1",
+    "pug": "^2.0.0-rc.4",
     "sequelize": "^4.32.2",
     "sequelize-cli": "^3.2.0",
     "serve-favicon": "~2.4.5"

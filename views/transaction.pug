@@ -1,0 +1,54 @@
+extends layout
+
+block content
+  h3 Transaction
+
+  table
+    tr
+      td Hash
+      td #{transaction.txid}
+    tr
+      td Block
+      td
+        a(href=`/block/${transaction.Block.hash}/`) #{transaction.Block.hash}
+    tr
+      td Block time
+      td #{transaction.blockTime}
+    tr
+      td Confirmations
+      td #{confirmations}
+
+  h3 In
+  if transaction.vins.length
+    table
+      tr
+        th Address
+        th Value
+        th Transaction
+      each vin in transaction.vins
+        tr
+          td
+            a(href=`/address/${vin.Addresses[0].address}/`) #{vin.Addresses[0].address}
+          td #{vin.value}
+          td 
+            a(href=`/transaction/${vin.Transactions[0].txid}/`) #{vin.Transactions[0].txid} 
+  else
+    div Mined
+
+  h3 Out
+  table
+    tr
+      th Address
+      th Value
+      th Transaction
+    each vout in transaction.vouts
+      each address in vout.Addresses
+        tr
+          td
+            a(href=`/address/${address.address}/`) #{address.address}
+          td #{vout.value}
+          td 
+            if vout.Transactions[0].TransactionVouts.direction == 0
+              a(href=`/transaction/${vout.Transactions[0].txid}/`) #{vout.Transactions[0].txid} 
+            else
+              span No yet

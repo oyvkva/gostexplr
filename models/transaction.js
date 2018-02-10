@@ -11,21 +11,21 @@ module.exports = (sequelize, DataTypes) => {
     }],
   });
 
-  const TxToTx = sequelize.define('TxToTx', {}, {
+  const TransactionVouts = sequelize.define('TransactionVouts', {
+    'direction': DataTypes.TINYINT(1),
+  }, {
     timestamps: false,
   });
-
-  Transaction.belongsToMany(Transaction, { through: TxToTx, as: 'txtx' });
 
   Transaction.associate = function (models) {
     models.Transaction.belongsTo(models.Block, {
       onDelete: "CASCADE",
       foreignKey: {
         allowNull: false
-      }
+      },
     });
 
-    models.Transaction.hasMany(models.Vout);
+    models.Transaction.belongsToMany(models.Vout, { through: 'TransactionVouts' });
   };
 
   return Transaction;

@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h3 Address
+  div= address.address
+
+  h3 Transactions
+  table
+  each vout in address.Vouts
+    tr
+      if vout.Transactions[0].TransactionVouts.direction == 1
+        td OUT 
+      else
+        td IN
+      td
+        a(href=`/transaction/${vout.Transactions[0].txid}/`) #{vout.Transactions[0].txid}
+  div.pagination
+  if prevpage
+    a(href=`/address/#{address}/${prevpage}/`, style='float:left') Back
+  if nextpage
+    a(href=`/address/${address}/${nextpage}/`, style='float:right') Next

@@ -9,13 +9,13 @@ block content
         tr
           td.capitalize #{key}
           td
-            a(href='/block/#{block.nextblockhash}/') #{block.nextblockhash}
+            a(href=`/block/${block.nextblockhash}/`) #{block.nextblockhash}
         -continue
       if (key === 'previousblockhash')
         tr
           td.capitalize #{key}
           td
-            a(href='/block/#{block.previousblockhash}/') #{block.previousblockhash}
+            a(href=`/block/${block.previousblockhash}/`) #{block.previousblockhash}
         -continue
       if (key === 'Transactions')
         -continue
@@ -26,5 +26,5 @@ block content
   h3 Transactions
   each tx in block.Transactions
     div
-      a(href='/transaction/#{tx.txid}/') #{tx.txid}
+      a(href=`/transaction/${tx.txid}/`) #{tx.txid}
 

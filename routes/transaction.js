@@ -15,27 +15,34 @@ router.get('/:txid', async function(req, res, next) {
       model: models.Block,
     },{
       model: models.Vout,
-      include: {
-        model: models.Address,
-      }
-    }, {
-      model: models.Transaction,
-      as: 'txtx',
-    }],
+      include: [
+        {
+          model: models.Address,
+        }, {
+          model: models.Transaction,
+          include: {
+            model: models.Vout,
+          },
+        }
+      ],
+    },],
   });
+
   if (transaction === null) {
     res.status(404).render('404');
     return;
   }
-  const vouts = [];
-  transaction.Vouts.forEach((vout) => {
-    vout.Addresses.forEach((address) => {
-      vouts.push({
-        address: address.address,
-        value: vout.value,
-      });
-    });
-  });
+
+  // const vouts = [];
+  // transaction.Vouts.forEach((vout) => {
+  //   vout.Addresses.forEach((address) => {
+  //     vouts.push({
+  //       address: address.address,
+  //       value: vout.value,
+  //     });
+  //   });
+  // });
+
   const lastBlock = await models.Block.findOne({
     attributes: [
       [models.sequelize.fn('MAX', models.sequelize.col('height')), 'maxheight']
@@ -43,10 +50,20 @@ router.get('/:txid', async function(req, res, next) {
     raw: true,
   });
   const confirmations = lastBlock.maxheight - transaction.Block.height + 1;
-  transaction.blockTime = transaction.Block.time.toUTCString();
+  
+  const txJson = transaction.toJSON();
+  // txJson.vins = txJson.Vouts.filter({TransactionVouts: {direction: 0}});
+  // txJson.vouts txJson.Vouts.filter({TransactionVouts: {direction: 1}});
+  const txTemplate = Object.assign(txJson, {
+    vins: txJson.Vouts.filter((vout) => vout.TransactionVouts.direction === 0),
+    vouts: txJson.Vouts.filter((vout) => vout.TransactionVouts.direction === 1),
+  });
+
+  txTemplate.blockTime = transaction.Block.time.toUTCString();
+
   res.render('transaction', {
-    transaction,
-    vouts,
+    transaction: txTemplate,
+    // vouts,
     confirmations,
   });
 });
