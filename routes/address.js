@@ -26,6 +26,7 @@ router.get('/:address/:offset*?', async function(req, res, next) {
     res.status(404).render('404');
     return;
   }
+  
   const limit = 30;
   const paramPage = parseInt(req.params.offset);
   const page = isNaN(paramPage) || paramPage < 1 ? 1 : paramPage;
