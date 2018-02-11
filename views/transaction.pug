@@ -7,12 +7,18 @@ block content
     tr
       td Hash
       td #{transaction.txid}
+
+  h3 Block
+  table
     tr
-      td Block
+      td Block height
       td
-        a(href=`/block/${transaction.Block.hash}/`) #{transaction.Block.hash}
+        a(href=`/block/${transaction.Block.hash}/`) #{transaction.Block.height}
     tr
-      td Block time
+      td Block hash
+      td #{transaction.Block.hash}
+    tr
+      td Time
       td #{transaction.blockTime}
     tr
       td Confirmations
@@ -47,8 +53,6 @@ block content
           td
             a(href=`/address/${address.address}/`) #{address.address}
           td #{vout.value}
-          td 
-            if vout.Transactions[0].TransactionVouts.direction == 0
-              a(href=`/transaction/${vout.Transactions[0].txid}/`) #{vout.Transactions[0].txid} 
-            else
-              span No yet
+          td
+            each transaction in vout.Transactions
+              a(href=`/transaction/${transaction.txid}/`) #{transaction.txid} 

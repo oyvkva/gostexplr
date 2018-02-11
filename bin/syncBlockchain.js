@@ -91,7 +91,7 @@ async function saveTransaction(txid, blockHeight) {
         },
       });
       if (vout) {
-        await transaction.addVouts(vout, { through: { direction: 0, }, });
+        await transaction.addVouts(vout[0], { through: { direction: 0, }, });
       } else {
         throw('Couldnt find vout for VIN');
       }
