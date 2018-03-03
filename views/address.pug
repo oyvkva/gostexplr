@@ -6,10 +6,9 @@ block content
 
   h3 Transactions
   table
-    each vout in address.Vouts
-      each transaction in vout.Transactions 
+    each transaction in transactions
         tr
-          if transaction.TransactionVouts.direction == 1
+          if transaction['Vouts.TransactionVouts.direction'] == 1
             td INCOME 
           else
             td OUTCOME

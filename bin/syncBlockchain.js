@@ -41,40 +41,56 @@ async function saveTransaction(txid, blockHeight) {
   const tx = JSON.parse(res_tx)['result'];
   if (tx === null) {
     await models.Failure.create({
-      msg: `${txid} fetching failed`,
+      msg: `Transaction ${txid} fetching failed`,
     });
     return;
   }
-  const transaction = await models.Transaction.create({
+  // const transaction = await models.Transaction.create({
+  //   txid: tx.txid,
+  //   BlockHeight: blockHeight,
+  // });
+  const transaction = {
     txid: tx.txid,
     BlockHeight: blockHeight,
-  });
+    vouts: [],
+  };
 
   // Loop over vouts
   for (var i = 0; i < tx.vout.length; i++) {
     const vout = tx.vout[i];
 
-    const m_vout = await models.Vout.create({
+    // const m_vout = await models.Vout.create({
+    //   n: vout.n,
+    //   value: vout.value,
+    // });
+    const m_vout = {
       n: vout.n,
       value: vout.value,
-    });
+      addresses: []
+    };
 
     // Loop over addresses in vout
     for (var y = 0; y < vout.scriptPubKey.addresses.length; y++) {
       const address = vout.scriptPubKey.addresses[y];
-      let m_address = await models.Address.findOne({
-        where: {
-          address,
-        },
-      });
-      if (m_address === null) {
-        m_address = await models.Address.create({
-          address,
-        });
-      }
-      await m_vout.addAddresses(m_address);
+      // let m_address = await models.Address.findOne({
+      //   where: {
+      //     address,
+      //   },
+      // });
+      // if (m_address === null) {
+      //   m_address = await models.Address.create({ /// TODO create
+      //     address,
+      //   });
+      // }
+      // if (m_address === null) {
+      //   m_address = { address, };
+      // }
+
+      // await m_vout.addAddresses(m_address);
+      m_vout.push(m_address);
     }
-    await transaction.addVouts(m_vout, {through: {direction: 1}});
+    // await transaction.addVouts(m_vout, {through: {direction: 1}}); // TODO create
+    transaction.addVouts(m_vout, {through: {direction: 1}}); // TODO create
   }
   for (var i = 0; i < tx.vin.length; i++) {
     const vin = tx.vin[i];
@@ -114,9 +130,9 @@ async function syncNextBlock(syncedHeight) {
   }));
   const block = JSON.parse(res_block)['result'];
   block.time = new Date(block.time * 1000);
-  await models.Block.create(block);
+  // await models.Block.create(block);
   for (var i = 0; i < block.tx.length; i++) {
-    await saveTransaction(block.tx[i], block.height);
+    // await saveTransaction(block.tx[i], block.height);
   }
   if (block.height > 1) {
     await models.Block.update({
@@ -159,12 +175,13 @@ async function syncBlockchain() {
   try {
     while (syncedHeight < currentHeight) {
       syncedHeight = await syncNextBlock(syncedHeight);
-      console.log('\x1b[36m%s\x1b[0m', 'syncedHeight: ', syncedHeight)
+      process.stdout.write(`Synced ${syncedHeight} out of ${currentHeight}\r`);
     }
   } catch (e) {
     console.log('=====', e);
     process.exit(0);
   }
+  process.stdout.write('\nDone\n');
   process.exit(0);
 }
 
