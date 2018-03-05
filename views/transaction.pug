@@ -46,13 +46,9 @@ block content
     tr
       th Address
       th Value
-      th Transaction
     each vout in transaction.vouts
       each address in vout.Addresses
         tr
           td
             a(href=`/address/${address.address}/`) #{address.address}
           td #{vout.value}
-          td
-            each transaction in vout.Transactions
-              a(href=`/transaction/${transaction.txid}/`) #{transaction.txid} 

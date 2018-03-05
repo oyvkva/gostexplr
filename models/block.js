@@ -25,7 +25,9 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Block.associate = function(models) {
-    models.Block.hasMany(models.Transaction);
+    models.Block.hasMany(models.Transaction, {
+      onDelete: "CASCADE",
+    });
   };
 
   return Block;

@@ -32,6 +32,7 @@ function MakeRPCRequest(postData) {
   });
 }
 
+// async function saveTransaction(txid, blockHeight) {
 async function saveTransaction(txid, blockHeight) {
   const res_tx = await MakeRPCRequest(JSON.stringify({
     method: 'getrawtransaction',
@@ -53,66 +54,121 @@ async function saveTransaction(txid, blockHeight) {
     txid: tx.txid,
     BlockHeight: blockHeight,
     vouts: [],
+    vins: [],
   };
 
   // Loop over vouts
   for (var i = 0; i < tx.vout.length; i++) {
     const vout = tx.vout[i];
-
-    // const m_vout = await models.Vout.create({
-    //   n: vout.n,
-    //   value: vout.value,
-    // });
     const m_vout = {
       n: vout.n,
       value: vout.value,
-      addresses: []
+      addresses: [],
+      direction: 1,
     };
-
     // Loop over addresses in vout
     for (var y = 0; y < vout.scriptPubKey.addresses.length; y++) {
       const address = vout.scriptPubKey.addresses[y];
-      // let m_address = await models.Address.findOne({
-      //   where: {
-      //     address,
-      //   },
-      // });
-      // if (m_address === null) {
-      //   m_address = await models.Address.create({ /// TODO create
-      //     address,
-      //   });
-      // }
-      // if (m_address === null) {
-      //   m_address = { address, };
-      // }
-
-      // await m_vout.addAddresses(m_address);
-      m_vout.push(m_address);
+      m_vout.addresses.push(address);
     }
-    // await transaction.addVouts(m_vout, {through: {direction: 1}}); // TODO create
-    transaction.addVouts(m_vout, {through: {direction: 1}}); // TODO create
+    transaction.vouts.push(m_vout); // TODO create
   }
   for (var i = 0; i < tx.vin.length; i++) {
     const vin = tx.vin[i];
     if (vin.txid) {
-      const vout = await models.Vout.findAll({
-        include: {
-          model: models.Transaction,
-          where: {
-            txid: vin.txid,
-          },
-        },
-        where: {
-          n: vin.vout,
-        },
-      });
-      if (vout) {
-        await transaction.addVouts(vout[0], { through: { direction: 0, }, });
-      } else {
-        throw('Couldnt find vout for VIN');
-      }
+      transaction.vins.push(vin); 
     }
   }
+  return transaction;
+}
+
+async function createBlock(block) {
+  return models.sequelize.transaction().then(async (t) => {
+    try {
+      console.log(1)
+      const m_block = await models.Block.create(Object.assign({}, block, {transaction: t}));
+      for (var i = block.tx.length - 1; i >= 0; i--) {
+        tx = block.tx[i];
+        if (!tx) continue; // for genesis block
+        console.log(2)
+        const m_transaction = await models.Transaction.create({
+          txid: tx.txid,
+          BlockHeight: tx.BlockHeight,
+          transaction: t,
+        });
+        console.log(2.1, m_transaction.id, m_block.height) 
+        await m_block.addTransaction(m_transaction, t);
+        console.log(2.2)
+        for (var y = tx.vouts.length - 1; y >= 0; y--) {
+          const vout = tx.vouts[y];
+          console.log(3)
+          const m_vout = await models.Vout.create({
+            n: vout.n,
+            value: vout.value,
+            direction: 1,
+            transaction: t,
+          });
+          console.log(4)
+          await m_transaction.addVouts(m_vout, {
+            through: {
+              direction: 1
+            },
+            transaction: t,
+          });
+          for (var z = vout.addresses.length - 1; z >= 0; z--) {
+            const address = vout.addresses[z];
+            console.log(5)
+            let m_address = await models.Address.findOne({
+              where: {
+                address,
+              },
+            });
+            if (!m_address) {
+              console.log(6)
+              m_address = await models.Address.create({
+                address,
+                transaction: t,
+              }, t);
+            }
+            console.log(7)
+            await m_vout.addAddress(m_address);
+          }
+        }
+        for (var y = tx.vins.length - 1; y >= 0; y--) {
+          const vin = tx.vins[y];
+          if (vin.txid) {
+            console.log(8)
+            const vout = await models.Vout.findAll({
+              include: {
+                model: models.Transaction,
+                where: {
+                  txid: vin.txid,
+                },
+              },
+              where: {
+                n: vin.vout,
+              },
+            });
+            if (vout) {
+              console.log(9)
+              await m_transaction.addVouts(vout[0], { 
+                through: { 
+                  direction: 0, 
+                }, 
+                transaction: t, 
+              });
+            } else {
+              throw('Couldnt find vout for VIN');
+            }
+          }
+        }
+      }
+      t.commit();
+    } catch (e) {
+      t.rollback();
+      console.log('===', e, 'error');
+    }
+  });
 }
 
 async function syncNextBlock(syncedHeight) {
@@ -130,11 +186,13 @@ async function syncNextBlock(syncedHeight) {
   }));
   const block = JSON.parse(res_block)['result'];
   block.time = new Date(block.time * 1000);
-  // await models.Block.create(block);
+
+  const blockToCreate = Object.assign({}, block, {'tx': []});
   for (var i = 0; i < block.tx.length; i++) {
-    // await saveTransaction(block.tx[i], block.height);
+    tx = await saveTransaction(block.tx[i], block.height);
+    blockToCreate.tx.push(tx);
   }
-  if (block.height > 1) {
+  if (blockToCreate.height > 1) {
     await models.Block.update({
       nextblockhash: block.hash
     },{
@@ -143,6 +201,7 @@ async function syncNextBlock(syncedHeight) {
       }
     });
   }
+  await createBlock(blockToCreate);
   return height;
 }
 
@@ -175,14 +234,18 @@ async function syncBlockchain() {
   try {
     while (syncedHeight < currentHeight) {
       syncedHeight = await syncNextBlock(syncedHeight);
-      process.stdout.write(`Synced ${syncedHeight} out of ${currentHeight}\r`);
+      // process.stdout.write(`Synced ${syncedHeight} out of ${currentHeight}\r`);
+      console.log(`Synced ${syncedHeight} out of ${currentHeight}`);
+      if (syncedHeight >= 125) 
+        process.exit(0)
     }
   } catch (e) {
-    console.log('=====', e);
+    console.log('+====', e);
     process.exit(0);
   }
   process.stdout.write('\nDone\n');
   process.exit(0);
 }
 
-syncBlockchain();
+syncBlockchain()
+ .then((res) => process.exit(0));

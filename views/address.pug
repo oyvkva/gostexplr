@@ -2,20 +2,20 @@ extends layout
 
 block content
   h3 Address
-  div= address.address
+  div= address
 
   h3 Transactions
   table
-    each transaction in transactions
+    each vout in vouts
         tr
-          if transaction['Vouts.TransactionVouts.direction'] == 1
+          if vout['Transactions.TransactionVouts.direction'] == 1
             td INCOME 
           else
             td OUTCOME
           td
-            a(href=`/transaction/${transaction.txid}/`) #{transaction.txid}
+            a(href=`/transaction/${vout['Transactions.txid']}/`) #{vout['Transactions.txid']}
   div.pagination
   if prevpage
-    a(href=`/address/#{address}/${prevpage}/`, style='float:left') Back
+    a(href=`/address/${address}/${prevpage}/`, style='float:left') Back
   if nextpage
     a(href=`/address/${address}/${nextpage}/`, style='float:right') Next
