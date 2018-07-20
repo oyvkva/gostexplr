@@ -23,7 +23,6 @@
     "debug": "~2.6.9",
     "express": "~4.15.5",
     "forever": "^0.15.3",
-    "javascript-time-ago": "^1.0.31",
     "morgan": "~1.9.0",
     "mysql": "^2.15.0",
     "mysql2": "^1.5.1",
