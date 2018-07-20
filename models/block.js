@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   	timestamps: false,
     indexes: [{
     	unique: true,
-    	fields: ['hash', 'height']
+    	fields: ['hash', 'height', 'time']
     }],
     freezeTableName: true,
   });
