@@ -4,10 +4,19 @@ block content
   h3 Last 100 blocks
 
   table
+    tr
+      td
+        b Height
+      td
+        b Time
+      td
+        b Difficulty
+      td
+        b Hash
     each block in blocks
       tr
-        td #{block.height}
-        td #{block.time}
-        td #{block.difficulty}
+        td #{block.height}  -
+        td #{block.ago}  -
+        td #{block.difficulty}  -
         td
           a(href='/block/' + block.hash + '/') #{block.hash}
