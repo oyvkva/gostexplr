@@ -8,7 +8,7 @@ router.get('/', async function(req, res, next) {
   const blocks = await models.Block.findAll({
     attributes: ['height', 'hash', 'time', 'difficulty'],
     order: [['height', 'DESC']],
-    limit: 30,
+    limit: 100,
   });
   res.render('index', {
     blocks,

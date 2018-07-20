@@ -1,5 +1,4 @@
 'use strict';
-import TimeAgo from 'javascript-time-ago'
 module.exports = (sequelize, DataTypes) => {
   const Block = sequelize.define('Block', {
   	height: {
@@ -20,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   	timestamps: false,
     indexes: [{
     	unique: true,
-    	fields: ['hash', 'height', 'time', 'difficulty']
+    	fields: ['hash', 'height']
     }],
     freezeTableName: true,
   });
