@@ -59,22 +59,27 @@ async function saveTransaction(txid, blockHeight) {
       value: vout.value,
     });
 
-    // Loop over addresses in vout
-    for (var y = 0; y < vout.scriptPubKey.addresses.length; y++) {
-      const address = vout.scriptPubKey.addresses[y];
-      let m_address = await models.Address.findOne({
-        where: {
-          address,
-        },
-      });
-      if (m_address === null) {
-        m_address = await models.Address.create({
-          address,
+    if (typeof vout.scriptPubKey.addresses !== 'undefined') {
+      // the variable is defined
+      // Loop over addresses in vout
+      for (var y = 0; y < vout.scriptPubKey.addresses.length; y++) {
+        const address = vout.scriptPubKey.addresses[y];
+        let m_address = await models.Address.findOne({
+          where: {
+            address,
+          },
         });
+        if (m_address === null) {
+          m_address = await models.Address.create({
+            address,
+          });
+        }
+        await m_vout.addAddresses(m_address);
       }
-      await m_vout.addAddresses(m_address);
+
+      
     }
-    await transaction.addVouts(m_vout, {through: {direction: 1}});
+      await transaction.addVouts(m_vout, {through: {direction: 1}});
   }
   for (var i = 0; i < tx.vin.length; i++) {
     const vin = tx.vin[i];
