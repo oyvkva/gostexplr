@@ -7,5 +7,6 @@ block content
     each block in blocks
       tr
         td #{block.height}
+        td #{block.time}
         td
           a(href='/block/' + block.hash + '/') #{block.hash}
