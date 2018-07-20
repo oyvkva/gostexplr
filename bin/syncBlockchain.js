@@ -106,7 +106,7 @@ async function syncNextBlock(syncedHeight) {
     params: [height],
     id: 1
   }));
-  const blockHash = JSON.parse(res_hash)['result'];
+  const blockHash = JSON.parse(res_hash)['result'].hash;
   const res_block = await MakeRPCRequest(JSON.stringify({
     method: 'getblock',
     params: [blockHash],
