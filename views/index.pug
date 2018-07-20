@@ -7,7 +7,7 @@ block content
     each block in blocks
       tr
         td #{block.height}
-        td #{timeAgo.format(block.time)}
+        td #{block.ago}
         td #{block.difficulty}
         td
           a(href='/block/' + block.hash + '/') #{block.hash}
